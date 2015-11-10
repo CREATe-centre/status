@@ -44,7 +44,7 @@ Vagrant.configure(2) do |config|
     
     d.pull_images "mysql"
     
-    d.build_image "/vagrant",
+    d.build_image "/vagrant/status-display",
       args: "-t wordpress"
     
     d.run "mysql:5.7",
@@ -65,7 +65,7 @@ Vagrant.configure(2) do |config|
         -e TWITTER_OAUTH_KEY=\"#{DevEnv::TWITTER_OAUTH_KEY}\" \
         -e TWITTER_OAUTH_SECRET=\"#{DevEnv::TWITTER_OAUTH_SECRET}\" \
         -e GOOGLE_MAPS_API_KEY=\"#{DevEnv::GOOGLE_MAPS_API_KEY}\" \
-        -v /vagrant/src:/var/www/html/wp-content/themes/status"
+        -v /vagrant/status-display/src:/var/www/html/wp-content/themes/status"
     
   end
   

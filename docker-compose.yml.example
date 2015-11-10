@@ -6,7 +6,7 @@ mysql:
   restart: always
     
 wordpress:
-  build: .
+  build: status-display
   container_name: wordpress
   ports:
     - "80:80"
