@@ -5,9 +5,9 @@ mysql:
     MYSQL_ROOT_PASSWORD: password
   restart: always
     
-wordpress:
+status-display:
   build: status-display
-  container_name: wordpress
+  container_name: status-display
   ports:
     - "80:80"
   links:
@@ -21,3 +21,17 @@ wordpress:
     TWITTER_OAUTH_KEY:
     TWITTER_OAUTH_SECRET:
     GOOGLE_MAPS_API_KEY:
+    
+status-stream:
+  build: status-stream
+  container_name: status-stream
+  links:
+    - mysql:mysql
+  environment:
+    WORDPRESS_DB_NAME : wordpress
+    WORDPRESS_DB_USER : root
+    WORDPRESS_DB_PASSWORD : password
+    WORDPRESS_DB_HOST : mysql
+    WORDPRESS_DB_PREFIX : wp_
+	
+		

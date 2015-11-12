@@ -16,7 +16,8 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: <<-SHELL
     
     apt-get update
-    apt-get install -y php5-cli php-pear php5-mysql git mysql-client openjdk-7-jdk maven
+    apt-get install -y php5-cli php-pear php5-mysql git mysql-client \
+    	openjdk-7-jre-headless openjdk-7-jdk maven
     if [ ! -e "/usr/local/bin/phpunit" ]; then
       curl -sSL -O https://phar.phpunit.de/phpunit.phar
       chmod a+x phpunit.phar
