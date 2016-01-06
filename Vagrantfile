@@ -47,6 +47,9 @@ Vagrant.configure(2) do |config|
     
     d.build_image "/vagrant/status-display",
       args: "-t wordpress"
+      
+    d.build_image "/vagrant/status-stream",
+      args: "-t stream"
     
     d.run "mysql:5.7",
       auto_assign_name: false,
@@ -67,6 +70,16 @@ Vagrant.configure(2) do |config|
         -e TWITTER_OAUTH_SECRET=\"#{DevEnv::TWITTER_OAUTH_SECRET}\" \
         -e GOOGLE_MAPS_API_KEY=\"#{DevEnv::GOOGLE_MAPS_API_KEY}\" \
         -v /vagrant/status-display/src:/var/www/html/wp-content/themes/status"
+    
+    d.run "stream",
+      auto_assign_name: false,
+      args: "--name stream \
+        --link mysql:mysql \
+        -e WORDPRESS_DB_NAME=\"wordpress\" \
+        -e WORDPRESS_DB_USER=\"root\" \
+        -e WORDPRESS_DB_PASSWORD=\"password\" \
+        -e WORDPRESS_DB_HOST=\"mysql\" \
+        -e WORDPRESS_DB_PREFIX=\"wp_\""
     
   end
   
