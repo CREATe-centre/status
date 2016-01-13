@@ -33,5 +33,4 @@ status-stream:
     WORDPRESS_DB_PASSWORD : password
     WORDPRESS_DB_HOST : mysql
     WORDPRESS_DB_PREFIX : wp_
-	
 		

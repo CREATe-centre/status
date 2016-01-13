@@ -46,19 +46,19 @@ Vagrant.configure(2) do |config|
     d.pull_images "mysql"
     
     d.build_image "/vagrant/status-display",
-      args: "-t wordpress"
+      args: "-t status-display"
       
     d.build_image "/vagrant/status-stream",
-      args: "-t stream"
+      args: "-t status-stream"
     
     d.run "mysql:5.7",
       auto_assign_name: false,
       args: "--name mysql \
         -e MYSQL_ROOT_PASSWORD=password"
     
-    d.run "wordpress",
+    d.run "status-display",
       auto_assign_name: false,
-      args: "--name wordpress \
+      args: "--name status-display \
         -p 0.0.0.0:80:80 \
         --link mysql:mysql \
         -e WORDPRESS_URL=\"" + DevEnv::IP + "\" \
@@ -71,9 +71,9 @@ Vagrant.configure(2) do |config|
         -e GOOGLE_MAPS_API_KEY=\"#{DevEnv::GOOGLE_MAPS_API_KEY}\" \
         -v /vagrant/status-display/src:/var/www/html/wp-content/themes/status"
     
-    d.run "stream",
+    d.run "status-stream",
       auto_assign_name: false,
-      args: "--name stream \
+      args: "--name status-stream \
         --link mysql:mysql \
         -e WORDPRESS_DB_NAME=\"wordpress\" \
         -e WORDPRESS_DB_USER=\"root\" \
@@ -92,7 +92,7 @@ Vagrant.configure(2) do |config|
     echo "$(docker inspect --format='{{.NetworkSettings.IPAddress}}' mysql) mysql" \
       >> /etc/hosts
     FS_ROOT=$(docker info | grep "Root Dir" | /bin/sed -e 's/^.*:\\s*\\(\\S*\\)\\s*/\\1/')
-    WP_CON_ID=$(docker inspect --format='{{.Id}}' wordpress)
+    WP_CON_ID=$(docker inspect --format='{{.Id}}' status-display)
     while [ ! -e "$FS_ROOT/diff/$WP_CON_ID/var/www/html/wp-config.php" ]; do
       echo "Waiting for WordPress to become ready"
       sleep 1
