@@ -5,7 +5,7 @@ require "./vagrant-config.rb"
 
 Vagrant.configure(2) do |config|
   
-  config.vm.box = "ubuntu/vivid64"
+  config.vm.box = "ubuntu/wily64"
   
   config.vm.network "private_network", ip: DevEnv::IP
   
@@ -41,7 +41,7 @@ Vagrant.configure(2) do |config|
     
   SHELL
   
-  config.vm.provision "docker", run: "always" do |d|
+  config.vm.provision "docker" do |d|
     
     d.pull_images "mysql"
     
@@ -91,14 +91,13 @@ Vagrant.configure(2) do |config|
     cp /etc/hosts.orig /etc/hosts
     echo "$(docker inspect --format='{{.NetworkSettings.IPAddress}}' mysql) mysql" \
       >> /etc/hosts
-    FS_ROOT=$(docker info | grep "Root Dir" | /bin/sed -e 's/^.*:\\s*\\(\\S*\\)\\s*/\\1/')
-    WP_CON_ID=$(docker inspect --format='{{.Id}}' status-display)
-    while [ ! -e "$FS_ROOT/diff/$WP_CON_ID/var/www/html/wp-config.php" ]; do
+    until docker exec status-display ls /var/www/html/wp-config.php
+    do
       echo "Waiting for WordPress to become ready"
       sleep 1
     done
     rm -f /var/www/html/wp-config.php
-    cp -f "$FS_ROOT/diff/$WP_CON_ID/var/www/html/wp-config.php" /var/www/html/wp-config.php
+    docker exec status-display cat /var/www/html/wp-config.php > /var/www/html/wp-config.php
     
   SHELL
   
